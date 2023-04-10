@@ -8,5 +8,7 @@
 							  "Pawn.cpp"
 							  "Knight.cpp"
 							  "Queen.cpp"
+							  "EmptySlot.cpp"
 							  "Location.cpp"
+							  "FactoryPieces.cpp"
 )

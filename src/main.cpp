@@ -5,6 +5,7 @@
 int main()
 {
 	auto board = Board();
+	auto playerTurn = PlayerColor::White;
     //string board = "##########K###############################R#############r#r#####";
 	Chess a(board.getBoard());
 	int codeResponse = 0;
@@ -28,11 +29,11 @@ int main()
 		/**/ 
 		{ // put your code here instead that code
 			cout << "code response >> ";
-			cin >> codeResponse;
+			const auto codeRespone = board.getCodeResponse(res, playerTurn);
 		}
 		/**/
 
-		a.setCodeResponse(codeResponse);
+		a.setCodeResponse(31);
 		res = a.getInput(); 
 	}
 
