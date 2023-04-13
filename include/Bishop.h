@@ -1,6 +1,6 @@
 #pragma once
 #include "Piece.h"
-const auto BISHOP_CHAR = 'P';
+const auto BISHOP_CHAR = 'B';
 
 class Bishop : virtual public Piece {
 public:

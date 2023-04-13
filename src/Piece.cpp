@@ -1,7 +1,11 @@
 #include "Piece.h"
 #include "Board.h"
 
-Piece::Piece(const char& myChar, const Location& loc, PlayerColor color, Board* board) : m_board(board), m_char(myChar), m_loc(loc)
+char getCharCase(PlayerColor color, const char& _ch) {
+	return (color == PlayerColor::Black ? std::tolower(_ch) : std::toupper(_ch));
+}
+
+Piece::Piece(const char& myChar, const Location& loc, PlayerColor color, Board* board) : m_board(board), m_char(getCharCase(color, myChar)), m_loc(loc)
 ,m_color(color) {}
 
 
@@ -18,11 +22,6 @@ Location Piece::getLocation() const
 PlayerColor Piece::getPlyrColor() const
 {
 	return m_color;
-}
-
-bool Piece::isLegalMovement(const Location&, const Location&) const
-{
-	return true;
 }
 
 bool Piece::checkOpponent(const Location& source)

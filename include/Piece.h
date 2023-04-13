@@ -20,7 +20,7 @@ public:
 	virtual bool isLegalMovement(const Location& source, const Location& dest) const = 0;
 	virtual bool checkOpponent(const Location& source);
 	virtual bool checkOpponent(const Location& source, const Location& dest);
-	virtual ~Piece() {}
+	virtual ~Piece() = default;
 private:
 	char m_char;
 	Location m_loc;

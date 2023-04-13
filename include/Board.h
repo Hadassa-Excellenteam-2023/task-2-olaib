@@ -6,13 +6,14 @@
 using std::array;
 using std::unique_ptr;
 
-const auto START_BOARD = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr";
+const auto START_BOARD = string("RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr");
 const auto BOARD_SIZE = 8;
 // ============================== CODE RESPONCE ENUM ==================
 enum CodeRes : int {
 	EmptyPiece = 11,
+	NoteYourPiece = 12,
 	YourPieceFoundAtDest = 13,
-	IlligalMove = 12,
+	IlligalMove = 21,
 	CheckMateOnMyself = 31,
 	CheckMateOnMOpponent = 41,
 	LegalMove = 42,
@@ -21,21 +22,21 @@ enum CodeRes : int {
 //=====================================================================
 class Board {
 public:
-	// =========================== C - TOR ============================
+	// =========================== C-TOR ==============================
 	Board(const std::string& start = START_BOARD);
 
 	// =========================== METHODS ============================
 
 	int getCodeResponse(const string& inpt, PlayerColor playerTurn);
-	//auto getBoard() const{ return m_initBoard;}
+	const string& getStringBoard() const{ return m_stringBoard;}
 	Location getOpponentKingLoc(PlayerColor myColor) const;
 	void move(const Location& source, const Location& dest);
 	bool isEmptySlot(const Location& loc) const;
 private:
-	
 	// =========================== PRIVATE FUNCTIONS =================
+	void init(const string& start);
 	bool isKingInCheck(const Location& source, const Location& dest) const;
 	// ============================= MEMBERS =========================
-	array <array< unique_ptr<Piece>, BOARD_SIZE> ,BOARD_SIZE> m_board;
-	//std::string m_initBoard;
+	array <array< unique_ptr<Piece>, BOARD_SIZE+1> ,BOARD_SIZE> m_board;
+	string m_stringBoard;
 };

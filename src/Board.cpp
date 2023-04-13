@@ -11,12 +11,11 @@
 #include <exception>
 #include <stdexcept>
 
-const int MAX_ROW = 7, MIN_ROW = 0,
-MIN_COL = 0, MAX_COL = 7;
-const char MAX_ROW_CHAR = 'h', MIN_ROW_CHAR = 'a',
-		   WHITE_KING   = 'K', // capital litter
+
+const char WHITE_KING   = 'K', // capital litter
 		   BLACK_KING   = 'k', // small litter
 		   EMPTY_SLOT   = '#'; // small litter
+const auto MAX_USER_INPT_LEN = 4;
 
 const auto INVALID_LOC = "Invalid Location : ";
 
@@ -24,19 +23,25 @@ const auto INVALID_LOC = "Invalid Location : ";
 // ===================================================
 namespace{
 	// int row to char
-	auto toChar(int row) {
-		if (MIN_ROW > row || row > MAX_ROW)
-			throw(std::out_of_range(INVALID_LOC + row));
-		return static_cast<char>(MIN_ROW_CHAR + row);
+	auto toChar(const int& row) {
+		switch (row)
+		{
+		case 0: return 'a';
+		case 1: return 'b';
+		case 2: return 'c';
+		case 3: return 'd';
+		case 4: return 'e';
+		case 5: return 'f';
+		case 6: return 'g';
+		case 7: return 'h';
+		default:
+			throw(std::invalid_argument("Invalid Row: " + row));
+		}
 	}
 
 	auto getLoc(int row, int col) {
-		if (MIN_COL <= col || col <= MAX_COL)
-			return Location(toChar(row), col);
-		//else
-		throw(std::out_of_range(INVALID_LOC + std::to_string(row) + " " + std::to_string(col)));
+		return Location(toChar(row), col);
 	}
-	
 
 	auto getPlayerColor(char _ch) { return std::islower(_ch) ? PlayerColor::Black : PlayerColor::White; }
 	
@@ -53,7 +58,6 @@ namespace{
 		case 'h': return 7;
 		default:
 			throw(std::invalid_argument("Invalid Row: " + row));
-
 		}
 	}
 	// char to int
@@ -62,19 +66,17 @@ namespace{
 		return (int)_ch - 48;
 	}
 }
-
-Board::Board(const string& start)
+Board::Board(const string& start) : m_stringBoard(start)
 {
-	auto starIndx = 0;
-	for (size_t i = 0; i < BOARD_SIZE; i++)
+	try{
+		init(start);
+	}
+	catch (std::invalid_argument e) { throw; }
+	catch (std::bad_alloc e) { throw; }
+	catch (std::out_of_range e) { throw; }
+	catch (...)
 	{
-		for (size_t j = 0; j < BOARD_SIZE; j++)
-		{
-			const auto _ch = start[starIndx++];
-
-			m_board[i][j] = (_ch == EMPTY_SLOT) ? nullptr:
-				FactoryPieces::create(std::toupper(_ch), getLoc(i, j),getPlayerColor(_ch), this);
-		}
+		throw;
 	}
 }
 
@@ -82,43 +84,38 @@ int Board::getCodeResponse(const string& inpt, PlayerColor playerTurn)
 {
 	Location source(inpt[0], toInt(inpt[1])),
 			 dest(inpt[2], toInt(inpt[3]));
-	int sourceL = charRow2Int(source.l);
 
-	if (!m_board[sourceL][source.n]) {
+	const auto sourceL = charRow2Int(source.l);
+	// the current piece
+	auto sourcePiece = m_board[sourceL][source.n].get();
+	if (!sourcePiece) {
 		return CodeRes::EmptyPiece; // return code: 11
 	}
 
-	// the current piece
-	auto sourcePiece = m_board[sourceL][source.n].get();
-	std::cout << "2" << std::endl;
-
-
 	if (sourcePiece->getPlyrColor() != playerTurn)
-		return CodeRes::IlligalMove; // return code 12
+		return CodeRes::NoteYourPiece; // return code 12
 
-	std::cout << "3" <<dest.l<< std::endl;
 	int destL = charRow2Int(dest.l);
-	std::cout << destL <<", " << dest.n << std::endl;
-	std::cout << "4" << dest.l << std::endl;
-
 
 	auto destPiece = m_board[destL][dest.n].get();
 
-
-	if (!destPiece && sourcePiece->getPlyrColor() == destPiece->getPlyrColor())
-		return CodeRes::YourPieceFoundAtDest; // return code 31
+	if (destPiece && (sourcePiece->getPlyrColor() == destPiece->getPlyrColor()))
+		return CodeRes::YourPieceFoundAtDest; // return code 13
 
 	if (!sourcePiece->isLegalMovement(source, dest))
 		return CodeRes::IlligalMove; //return code 21
 
-	std::swap(sourcePiece, destPiece);
-	destPiece->setLocation(dest);
-
-	if (isKingInCheck(source, dest))
-	{
-		destPiece->setLocation(source);
+	// temporary movement to check if was check on king
 		std::swap(sourcePiece, destPiece);
-		return CodeRes::CheckMateOnMyself; // return code 31
+		destPiece->setLocation(dest);
+	if (sourcePiece) {
+
+		if (isKingInCheck(source, dest))
+		{
+			destPiece->setLocation(source);
+			std::swap(sourcePiece, destPiece);
+			return CodeRes::CheckMateOnMyself; // return code 31
+		}
 	}
 
 	destPiece->setLocation(source);
@@ -139,38 +136,51 @@ Location Board::getOpponentKingLoc(PlayerColor myColor)const
 	for (auto& row : m_board)
 		for (auto& piece : row)
 		{
-			auto pieceColor = piece->getPlyrColor();
 			if (piece && (myColor != piece->getPlyrColor() &&
-				(pieceColor == WHITE_KING || pieceColor == BLACK_KING)))
+				(piece->getPlyrColor() == WHITE_KING || piece->getPlyrColor() == BLACK_KING)))
 				return piece->getLocation();
 		}
 }
 
 void Board::move(const Location& source, const Location& dest)
 {
-	auto& sourcePiece = m_board[charRow2Int(source.l)][source.n - 1];
+	auto& sourcePiece = m_board[charRow2Int(source.l)][source.n];
 
-	auto& destPiece = m_board[charRow2Int(dest.l)][dest.n - 1];
+	auto& destPiece = m_board[charRow2Int(dest.l)][dest.n];
 	// swap places
 	std::swap(sourcePiece, destPiece);
-	destPiece->setLocation(source);
-	sourcePiece->setLocation(dest);
-
+	destPiece->setLocation(dest);
+	sourcePiece.release();
 }
 
 bool Board::isEmptySlot(const Location& loc) const
 {
 	//check if emptyslot - no piece found at wanted location
-	return m_board[charRow2Int(loc.l)][loc.n].get() == nullptr;
+	return m_board[charRow2Int(loc.l)][loc.n] == nullptr;
+}
+
+void Board::init(const string& start)
+{
+	auto starIndx = 0;
+	for (size_t row = 0; row < BOARD_SIZE; row++)
+	{
+		for (size_t col = 1; col <= BOARD_SIZE; col++)
+		{
+			const auto _ch = start[starIndx++];
+
+			m_board[row][col] = (_ch == EMPTY_SLOT) ? nullptr :
+				FactoryPieces::create(std::toupper(_ch), getLoc(row, col), getPlayerColor(_ch), this);
+		}
+	}
 }
 
 bool Board::isKingInCheck(const Location& source, const Location& dest) const
 {
-	auto sourcePiece = m_board[charRow2Int(source.l)][source.n - 1].get();
+	auto sourcePiece = m_board[charRow2Int(source.l)][source.n].get();
 
-	auto destPiece = m_board[charRow2Int(dest.l)][dest.n - 1].get();
+	auto destPiece = m_board[charRow2Int(dest.l)][dest.n].get();
 
-	auto destKing = destPiece->getPlyrColor();
+	auto destKing = destPiece->getChar();
 
 	if (sourcePiece && destKing == WHITE_KING || destKing == BLACK_KING)
 		return false;

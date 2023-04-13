@@ -15,24 +15,25 @@ bool Bishop::isLegalMovement(const Location& source, const Location& dest) const
 
 bool Bishop::isBishopLegalMove(const Location& source, const Location& dest) const
 {
-	int diffL = abs(source.l - dest.l),
-		diffN = abs(source.n - dest.n);
+    int diffL = source.l - dest.l;
+    int diffN = source.n - dest.n;
 
-	if (diffL != diffN)
-		return false;
+    if (abs(diffL) != abs(diffN))
+        return false;
 
-	auto dir = Location((source.l < dest.l) ? 1 : -1, (source.n < dest.n) ? 1 : -1);
+    int signL = (diffL > 0) ? -1 : 1;
+    int signN = (diffN > 0) ? -1 : 1;
 
-	auto loc = Location(source.l + dir.l, source.n + dir.n);
+    for (char l = source.l + signL, n = source.n + signN;
+        l != dest.l;
+        l += signL, n += signN)
+    {
+        if (!m_board->isEmptySlot(Location(l, n)))
+            return false;
+    }
 
-	while (loc != dest)
-	{
-		if (!m_board->isEmptySlot(loc))
-			return false;
-		loc.l += dir.l;
-		loc.n += dir.n;
-	}
-	return true;
+    return true;
+
 }
 
 

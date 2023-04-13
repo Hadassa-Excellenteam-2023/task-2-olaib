@@ -6,7 +6,7 @@ bool Queen::m_registerit = FactoryPieces::registerit(QUEEN_CHAR, [](const char& 
 );
 
 Queen::Queen(const char& _ch, const Location& loc, PlayerColor color, Board* board)
-	: Piece(_ch, loc, color, board), Bishop(_ch, loc, color, board), Rook(_ch, loc, color, board) 
+	: Piece::Piece(_ch, loc, color, board), Bishop(_ch, loc, color, board), Rook(_ch, loc, color, board) 
 {}
 
 

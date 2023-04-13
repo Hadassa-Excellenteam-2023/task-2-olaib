@@ -15,31 +15,26 @@ bool Rook::isLegalMovement(const Location& source, const Location& dest) const
 
 bool Rook::isRookLegalMove(const Location& source, const Location& dest) const
 {
-	// Rook can only move horizontally or vertically
-	if (source.l != dest.l && source.n != dest.n) {
-		return false;
-	}
-
-	// Check if there is a valid path(clear) between source and destination
-	int start, end, step;
-	if (source.l == dest.l) {
-		start = std::min(source.n, dest.n);
-		end = std::max(source.n, dest.n);
-		step = (source.n < dest.n) ? 1 : -1;
-	}
-	else {
-		start = std::min(source.l, dest.l);
-		end = std::max(source.l, dest.l);
-		step = (source.l < dest.l) ? 1 : -1;
-	}
-
-	for (int i = start + 1; i < end; i++)
-	{
-		auto pathLoc = Location((source.l == dest.l) ? source.l : static_cast<char>(i),
-			(source.n == dest.n) ? source.n : static_cast<int>(i));
-
-		if (!m_board->isEmptySlot(pathLoc))
-			return false;
-	}
-	return true;
+    if (source.l == dest.l && source.n != dest.n) 
+    {
+        int step = (dest.n - source.n > 0) ? 1 : -1;
+        for (int n = (source.n + step); n != dest.n; n += step) {
+            if (!m_board->isEmptySlot(Location(source.l, n))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    else if (source.l != dest.l && source.n == dest.n) 
+    {
+        int step = (dest.l - source.l > 0) ? 1 : -1;
+        for (char l = (source.l + step); l != dest.l; l += step) {
+            if (!m_board->isEmptySlot(Location(l, source.n))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    //else
+    return false;
 }
