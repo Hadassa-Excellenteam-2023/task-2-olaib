@@ -8,8 +8,7 @@ char getCharCase(PlayerColor color, const char& _ch) {
 Piece::Piece(const char& myChar, const Location& loc, PlayerColor color, Board* board) : m_board(board), m_char(getCharCase(color, myChar)), m_loc(loc)
 ,m_color(color) {}
 
-
-void Piece::setLocation(Location dist)
+void Piece::setLocation(const Location& dist)
 {
 	m_loc = dist;
 }

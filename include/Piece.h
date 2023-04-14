@@ -14,7 +14,7 @@ class Piece {
 public:
 	Piece(const char& myChar,const Location& loc, PlayerColor color, Board* board);
 	virtual char getChar() const { return m_char; }
-	virtual void setLocation(Location dist);
+	virtual void setLocation(const Location& dist);
 	virtual Location getLocation() const;
 	virtual PlayerColor getPlyrColor() const;
 	virtual bool isLegalMovement(const Location& source, const Location& dest) const = 0;

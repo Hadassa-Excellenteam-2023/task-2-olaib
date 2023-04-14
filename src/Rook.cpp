@@ -15,21 +15,21 @@ bool Rook::isLegalMovement(const Location& source, const Location& dest) const
 
 bool Rook::isRookLegalMove(const Location& source, const Location& dest) const
 {
-    if (source.l == dest.l && source.n != dest.n) 
+    if (source.getLetter() == dest.getLetter() && source.getNum() != dest.getNum())
     {
-        int step = (dest.n - source.n > 0) ? 1 : -1;
-        for (int n = (source.n + step); n != dest.n; n += step) {
-            if (!m_board->isEmptySlot(Location(source.l, n))) {
+        int step = (dest.getNum() - source.getNum() > 0) ? 1 : -1;
+        for (int n = (source.getNum() + step); n != dest.getNum(); n += step) {
+            if (!m_board->isEmptySlot(Location(source.getLetter(), n))) {
                 return false;
             }
         }
         return true;
     }
-    else if (source.l != dest.l && source.n == dest.n) 
+    else if (source.getLetter() != dest.getLetter() && source.getNum() == dest.getNum())
     {
-        int step = (dest.l - source.l > 0) ? 1 : -1;
-        for (char l = (source.l + step); l != dest.l; l += step) {
-            if (!m_board->isEmptySlot(Location(l, source.n))) {
+        int step = (dest.getLetter() - source.getLetter() > 0) ? 1 : -1;
+        for (char l = (source.getLetter() + step); l != dest.getLetter(); l += step) {
+            if (!m_board->isEmptySlot(Location(l, source.getNum()))) {
                 return false;
             }
         }

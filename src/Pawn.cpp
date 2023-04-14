@@ -12,17 +12,17 @@ Pawn::Pawn(const char& _ch, const Location& loc, PlayerColor color, Board* board
 
 bool Pawn::isLegalMovement(const Location& source, const Location& dest) const
 {
-	int diffL = source.l - dest.l;
-	auto amIBlack = getPlyrColor();
+	int diffL = source.getLetter() - dest.getLetter(), destN = dest.getNum();
+	auto amIBlack = getPlyrColor() == PlayerColor::Black;
+	char sourceL = source.getLetter(), destL = dest.getLetter();
 
-	if ((!amIBlack && source.l == SECOND_ROW && source == Location(dest.l - 2, dest.n))
-		|| (amIBlack && source.l == SEVENTH_ROW && source == Location(dest.l + 2, dest.n)))
+	if ((!amIBlack && sourceL == SECOND_ROW && source == Location(destL - 2, destN))
+		|| (amIBlack && sourceL == SEVENTH_ROW && source == Location(destL + 2, destN)))
 
 		return true;
 
-	if ((abs(diffL) != 1 || source.n != dest.n)
+	if ((abs(diffL) != 1 || source.getNum() != destN)
 		|| ((!amIBlack && diffL >= 0) || (amIBlack && diffL <= 0)))
-
 		return false;
 
 	return true;

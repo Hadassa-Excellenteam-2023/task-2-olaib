@@ -10,8 +10,8 @@ King::King(const char& _ch, const Location& loc, PlayerColor color, Board* board
 
 bool King::isLegalMovement(const Location& source, const Location& dest) const
 {
-	int rowDiff = abs(source.l - dest.l),
-		colDiff = abs(source.n - dest.n);
+	int rowDiff = abs(source.getLetter() - dest.getLetter()),
+		colDiff = abs(source.getNum() - dest.getNum());
 
 	if (colDiff != 0 && colDiff != 1)
 		return false;

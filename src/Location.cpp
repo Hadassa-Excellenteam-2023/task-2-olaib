@@ -1,23 +1,45 @@
 #include "Location.h"
 
-Location Location::operator()(const char& letter, const int& num) const
-{
-	return Location(letter, num);
+Location::Location(const char& letter, const int& num) : m_letter(letter), m_num(num) {}
+
+Location::Location(const Location& other) : m_letter(other.m_letter), m_num(other.m_num) {}
+
+Location& Location::operator=(const Location& other) {
+    m_letter = other.m_letter;
+    m_num = other.m_num;
+    return *this;
 }
 
-Location Location::operator()(char letter, int num) const
-{
-	return Location(letter, num);
+const bool Location::operator==(const Location& other) const {
+    return m_letter == other.m_letter && m_num == other.m_num;
 }
 
-
-const bool operator==(const Location& lhs, const Location& rhs)
-{
-	return lhs.l == rhs.l && lhs.n == rhs.n;
+const bool Location::operator!=(const Location& other) const {
+    return !(*this == other);
 }
 
-const bool operator!=(const Location& lhs, const Location& rhs)
-{
-	return !(lhs == rhs);
+Location Location::operator+(const Location& other) const {
+    return Location(m_letter + other.m_letter, m_num + other.m_num);
 }
 
+Location Location::operator-(const Location& other) const {
+    return Location(m_letter - other.m_letter, m_num - other.m_num);
+}
+
+const bool Location::operator<(const Location& other) const {
+    if (m_letter < other.m_letter)
+        return true;
+    else if (m_letter == other.m_letter)
+        return m_num < other.m_num;
+    else
+        return false;
+}
+
+const bool Location::operator>(const Location& other) const {
+    if (m_letter > other.m_letter)
+        return true;
+    else if (m_letter == other.m_letter)
+        return m_num > other.m_num;
+    else
+        return false;
+}

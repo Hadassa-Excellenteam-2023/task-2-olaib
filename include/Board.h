@@ -2,7 +2,6 @@
 #include "Piece.h"
 #include <array>
 #include "memory"
-#include<iostream>
 using std::array;
 using std::unique_ptr;
 

@@ -9,8 +9,8 @@ Knight::Knight(const char& _ch, const Location& loc, PlayerColor color, Board* b
 
 bool Knight::isLegalMovement(const Location& source, const Location& dest) const
 {
-	int diffL = abs(source.l - dest.l),
-		diffN = abs(source.n - dest.n);
+	int diffL = abs(source.getLetter() - dest.getLetter()),
+		diffN = abs(source.getNum() - dest.getNum());
 
 	return (((diffL == 1) && (diffN == 2)) || ((diffL == 2) && (diffN == 1)));
 }

@@ -27,14 +27,16 @@ void Controller::run()
 		41 - the last movement was legal and cause check
 		42 - the last movement was legal, next turn
 		*/
-		{
+		try {
 			codeResponse = m_board.getCodeResponse(res, playerTurn);
 			if (codeResponse == CodeRes::LegalMove || codeResponse == CodeRes::CheckMateOnMOpponent)
-				playerTurn = playerTurn == PlayerColor::White? PlayerColor::Black : PlayerColor::White;
+				playerTurn = playerTurn == PlayerColor::White ? PlayerColor::Black : PlayerColor::White;
 
+
+			m_chess.setCodeResponse(codeResponse);
 		}
-
-		m_chess.setCodeResponse(codeResponse);
+		catch (std::invalid_argument e) {
+		}
 		res = m_chess.getInput();
 	}
 	cout << endl << "Exiting " << endl;
