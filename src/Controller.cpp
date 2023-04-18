@@ -1,15 +1,17 @@
 #include "Controller.h"
 const auto EXIT = "exit";
 
-
-Controller::Controller() : m_board() ,m_chess(START_BOARD)
+// m_chess(m_board.getStringBoard not working ): - "string too long" exception so you should add the 
+//																	board in 2 c-tors as param
+Controller::Controller() :m_board(START_BOARD),
+	//m_chess(m_board.getStringBoard())
+	m_chess(START_BOARD)
 {}
 
 // =================================================================
 void Controller::run()
 {
 	auto playerTurn = PlayerColor::White;
-	//string board = "##########K###############################R#############r#r#####";
 	int codeResponse = 0;
 	string res = m_chess.getInput();
 	while (res != "exit")

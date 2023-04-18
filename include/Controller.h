@@ -9,4 +9,5 @@ public:
 private:
 	Chess m_chess;
 	Board m_board;
+	string m_stringBoard;
 };

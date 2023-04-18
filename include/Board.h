@@ -2,6 +2,8 @@
 #include "Piece.h"
 #include <array>
 #include "memory"
+#include <string>
+using std::string;
 using std::array;
 using std::unique_ptr;
 
@@ -22,12 +24,12 @@ enum CodeRes : int {
 class Board {
 public:
 	// =========================== C-TOR ==============================
-	Board(const std::string& start = START_BOARD);
+	Board(const string& start = START_BOARD);
 
 	// =========================== METHODS ============================
 
 	int getCodeResponse(const string& inpt, PlayerColor playerTurn);
-	const string& getStringBoard() const{ return m_stringBoard;}
+    const auto& getStringBoard() const{ return m_stringBoard;}
 	Location getOpponentKingLoc(PlayerColor myColor) const;
 	void move(const Location& source, const Location& dest);
 	bool isEmptySlot(const Location& loc) const;
