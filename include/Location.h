@@ -1,21 +1,21 @@
 #pragma once
 
-typedef struct Location
-{
-    char l;
-    int n;
+class Location {
+public:
+    Location(const char& letter = 'a', const int& num = 0);
+    Location(const Location& other);
+    Location& operator=(const Location& other);
+    const bool operator==(const Location& other) const;
+    const bool operator!=(const Location& other) const;
+    Location operator+(const Location& other) const;
+    Location operator-(const Location& other) const;
+    const bool operator<(const Location& other) const;
+    const bool operator>(const Location& other) const;
+    char getLetter() const { return m_letter; }
+    int getNum() const { return m_num; }
+private:
+    char m_letter;
+    int m_num;
+};
 
-    Location(const char& letter, const int& num) : l(letter), n(num) {}
-    Location operator() (const char& letter, const int& num) const { return Location(letter, num); }
 
-} Location;
-
-const bool operator==(const Location& lhs, const Location& rhs)
-{
-    return lhs.l == rhs.l && lhs.n == rhs.n;
-}
-
-const bool operator!=(const Location& lhs, const Location& rhs)
-{
-    return !(lhs == rhs);
-}
