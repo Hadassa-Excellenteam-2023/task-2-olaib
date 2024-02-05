@@ -3,7 +3,7 @@
 <img src="https://i.pinimg.com/736x/3c/4f/18/3c4f1886e5b1d47f3126703fd20f56b7.jpg" class="mx-auto text-center" alt="chess board" width="200" height="200">
 
 ## Description
- This is a simple console-based chess game written in Python. The game board is displayed on the console and the player is prompted to enter a source square and a destination square using a letter and a number. The pieces are represented by letters: R (rook), B (bishop), K (king), Q (queen), P (pawn), with uppercase letters representing white pieces and lowercase letters representing black pieces. The game verifies that the move is legal and possible, and returns a response code based on the move.
+ This is a simple console-based chess game written in C++. The game board is displayed on the console and the player is prompted to enter a source square and a destination square using a letter and a number. The pieces are represented by letters: R (rook), B (bishop), K (king), Q (queen), P (pawn), with uppercase letters representing white pieces and lowercase letters representing black pieces. The game verifies that the move is legal and possible, and returns a response code based on the move.
 
 
 ## Usage
